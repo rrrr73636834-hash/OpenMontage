@@ -8,13 +8,10 @@ jobs:
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - name: Setup
-        run: |
-          pip install edge-tts faster-whisper requests python-dotenv -q
-          sudo apt-get update -qq
-          sudo apt-get install -y ffmpeg --fix-missing
-      - name: Make video
-        env:
+      - uses: FedericoCarboni/setup-ffmpeg@v3
+        id: setup-ffmpeg
+      - run: pip install edge-tts faster-whisper requests python-dotenv -q
+      - env:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -30,13 +27,9 @@ jobs:
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - name: Setup
-        run: |
-          pip install edge-tts faster-whisper requests python-dotenv -q
-          sudo apt-get update -qq
-          sudo apt-get install -y ffmpeg --fix-missing
-      - name: Make video
-        env:
+      - uses: FedericoCarboni/setup-ffmpeg@v3
+      - run: pip install edge-tts faster-whisper requests python-dotenv -q
+      - env:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -52,13 +45,9 @@ jobs:
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - name: Setup
-        run: |
-          pip install requests python-dotenv -q
-          sudo apt-get update -qq
-          sudo apt-get install -y ffmpeg --fix-missing
-      - name: Make video
-        env:
+      - uses: FedericoCarboni/setup-ffmpeg@v3
+      - run: pip install requests python-dotenv -q
+      - env:
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         run: python soundscape.py "Dark Forest Rain for Deep Sleep" --mood rain --hours 8
       - uses: actions/upload-artifact@v4
