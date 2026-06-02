@@ -1,0 +1,38 @@
+name: Make Video
+on:
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: 'Video topic'
+        default: 'How Enron Destroyed 20000 Lives'
+      duration:
+        description: 'Duration in minutes'
+        default: '25'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install deps
+        run: |
+          pip install edge-tts faster-whisper requests python-dotenv
+          sudo apt-get install -y ffmpeg
+          
+      - name: Make video
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          python documentary.py "${{ inputs.topic }}" \
+            --duration ${{ inputs.duration }} --lang en
+            
+      - name: Upload video
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-video
+          path: projects/*/final.mp4
+          retention-days: 7
