@@ -8,10 +8,16 @@ jobs:
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: FedericoCarboni/setup-ffmpeg@v3
-        id: setup-ffmpeg
-      - run: pip install edge-tts faster-whisper requests python-dotenv -q
-      - env:
+      - name: Install ffmpeg (static, no apt)
+        run: |
+          pip install imageio-ffmpeg -q
+          FFMPEG=$(python3 -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())")
+          sudo ln -sf "$FFMPEG" /usr/local/bin/ffmpeg
+          ffmpeg -version | head -1
+      - name: Install Python deps
+        run: pip install edge-tts faster-whisper requests python-dotenv -q
+      - name: Make video
+        env:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -27,9 +33,15 @@ jobs:
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: FedericoCarboni/setup-ffmpeg@v3
-      - run: pip install edge-tts faster-whisper requests python-dotenv -q
-      - env:
+      - name: Install ffmpeg (static, no apt)
+        run: |
+          pip install imageio-ffmpeg -q
+          FFMPEG=$(python3 -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())")
+          sudo ln -sf "$FFMPEG" /usr/local/bin/ffmpeg
+      - name: Install Python deps
+        run: pip install edge-tts faster-whisper requests python-dotenv -q
+      - name: Make video
+        env:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -45,9 +57,15 @@ jobs:
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      - uses: FedericoCarboni/setup-ffmpeg@v3
-      - run: pip install requests python-dotenv -q
-      - env:
+      - name: Install ffmpeg (static, no apt)
+        run: |
+          pip install imageio-ffmpeg -q
+          FFMPEG=$(python3 -c "import imageio_ffmpeg; print(imageio_ffmpeg.get_ffmpeg_exe())")
+          sudo ln -sf "$FFMPEG" /usr/local/bin/ffmpeg
+      - name: Install Python deps
+        run: pip install requests python-dotenv -q
+      - name: Make video
+        env:
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         run: python soundscape.py "Dark Forest Rain for Deep Sleep" --mood rain --hours 8
       - uses: actions/upload-artifact@v4
