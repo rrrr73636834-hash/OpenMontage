@@ -1,38 +1,68 @@
-name: Make Video
+name: Make 3 Videos
 on:
   workflow_dispatch:
-    inputs:
-      topic:
-        description: 'Video topic'
-        default: 'How Enron Destroyed 20000 Lives'
-      duration:
-        description: 'Duration in minutes'
-        default: '25'
 
 jobs:
-  build:
+  business:
     runs-on: ubuntu-latest
     timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Install deps
+      - name: Setup
         run: |
-          pip install edge-tts faster-whisper requests python-dotenv
-          sudo apt-get install -y ffmpeg
-          
+          pip install edge-tts faster-whisper requests python-dotenv -q
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg --fix-missing
       - name: Make video
         env:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: |
-          python documentary.py "${{ inputs.topic }}" \
-            --duration ${{ inputs.duration }} --lang en
-            
-      - name: Upload video
-        uses: actions/upload-artifact@v4
+        run: python documentary.py "How Enron Destroyed 20000 Lives" --duration 25 --lang en
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: final-video
+          name: enron-video
           path: projects/*/final.mp4
-          retention-days: 7
+
+  stoicism:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup
+        run: |
+          pip install edge-tts faster-whisper requests python-dotenv -q
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg --fix-missing
+      - name: Make video
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python documentary.py "How Marcus Aurelius Mastered Self Control" --duration 20 --lang en
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: marcus-video
+          path: projects/*/final.mp4
+
+  sleep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup
+        run: |
+          pip install requests python-dotenv -q
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg --fix-missing
+      - name: Make video
+        env:
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+        run: python soundscape.py "Dark Forest Rain for Deep Sleep" --mood rain --hours 8
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sleep-video
+          path: soundscapes/*/final.mp4
