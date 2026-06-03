@@ -18,7 +18,7 @@ jobs:
           sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffmpeg /usr/local/bin/
           sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffprobe /usr/local/bin/
       - name: Install Python deps
-        run: pip install edge-tts faster-whisper requests python-dotenv soundfile -q
+        run: pip install edge-tts faster-whisper requests python-dotenv soundfile kokoro -q
       - name: Make video
         env:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
@@ -30,9 +30,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VIDEO=$(find projects -name "final.mp4" | head -1)
-          TAG="video-$(date +%Y%m%d-%H%M%S)-enron"
-          gh release create "$TAG" "$VIDEO#enron_documentary.mp4" \
-            --title "Enron Documentary" --notes "AI Generated"
+          TAG="enron-$(date +%Y%m%d-%H%M%S)"
+          gh release create "$TAG" "$VIDEO#enron_documentary.mp4" --title "Enron Documentary" --notes "AI"
 
   stoicism:
     runs-on: ubuntu-latest
@@ -46,7 +45,7 @@ jobs:
           sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffmpeg /usr/local/bin/
           sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffprobe /usr/local/bin/
       - name: Install Python deps
-        run: pip install edge-tts faster-whisper requests python-dotenv soundfile -q
+        run: pip install edge-tts faster-whisper requests python-dotenv soundfile kokoro -q
       - name: Make video
         env:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
@@ -58,9 +57,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VIDEO=$(find projects -name "final.mp4" | head -1)
-          TAG="video-$(date +%Y%m%d-%H%M%S)-marcus"
-          gh release create "$TAG" "$VIDEO#marcus_documentary.mp4" \
-            --title "Marcus Aurelius Documentary" --notes "AI Generated"
+          TAG="marcus-$(date +%Y%m%d-%H%M%S)"
+          gh release create "$TAG" "$VIDEO#marcus_documentary.mp4" --title "Marcus Aurelius" --notes "AI"
 
   sleep:
     runs-on: ubuntu-latest
@@ -74,7 +72,7 @@ jobs:
           sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffmpeg /usr/local/bin/
           sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffprobe /usr/local/bin/
       - name: Install Python deps
-        run: pip install requests python-dotenv -q
+        run: pip install requests python-dotenv soundfile -q
       - name: Make video
         env:
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
@@ -84,6 +82,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           VIDEO=$(find soundscapes -name "final.mp4" | head -1)
-          TAG="video-$(date +%Y%m%d-%H%M%S)-sleep"
-          gh release create "$TAG" "$VIDEO#sleep_soundscape.mp4" \
-            --title "Sleep Soundscape 8H" --notes "AI Generated"
+          TAG="sleep-$(date +%Y%m%d-%H%M%S)"
+          gh release create "$TAG" "$VIDEO#sleep_soundscape.mp4" --title "Sleep Soundscape 8H" --notes "AI"
