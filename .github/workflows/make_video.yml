@@ -2,6 +2,9 @@ name: Make 3 Videos
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   business:
     runs-on: ubuntu-latest
@@ -14,20 +17,22 @@ jobs:
           tar xf ffmpeg-master-latest-linux64-gpl.tar.xz
           sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffmpeg /usr/local/bin/
           sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffprobe /usr/local/bin/
-          ffmpeg -version | head -1
       - name: Install Python deps
-        run: pip install edge-tts faster-whisper requests python-dotenv kokoro soundfile -q
+        run: pip install edge-tts faster-whisper requests python-dotenv -q
       - name: Make video
         env:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python documentary.py "How Enron Destroyed 20000 Lives" --duration 25 --lang en
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: enron-video
-          path: projects/*/final.mp4
+      - name: Upload to Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VIDEO=$(find projects -name "final.mp4" | head -1)
+          TAG="video-$(date +%Y%m%d-%H%M%S)-enron"
+          gh release create "$TAG" "$VIDEO#enron_documentary.mp4" \
+            --title "Enron Documentary" --notes "AI Generated"
 
   stoicism:
     runs-on: ubuntu-latest
@@ -41,18 +46,21 @@ jobs:
           sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffmpeg /usr/local/bin/
           sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffprobe /usr/local/bin/
       - name: Install Python deps
-        run: pip install edge-tts faster-whisper requests python-dotenv kokoro soundfile -q
+        run: pip install edge-tts faster-whisper requests python-dotenv -q
       - name: Make video
         env:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python documentary.py "How Marcus Aurelius Mastered Self Control" --duration 20 --lang en
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: marcus-video
-          path: projects/*/final.mp4
+      - name: Upload to Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VIDEO=$(find projects -name "final.mp4" | head -1)
+          TAG="video-$(date +%Y%m%d-%H%M%S)-marcus"
+          gh release create "$TAG" "$VIDEO#marcus_documentary.mp4" \
+            --title "Marcus Aurelius Documentary" --notes "AI Generated"
 
   sleep:
     runs-on: ubuntu-latest
@@ -71,8 +79,11 @@ jobs:
         env:
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         run: python soundscape.py "Dark Forest Rain for Deep Sleep" --mood rain --hours 8
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: sleep-video
-          path: soundscapes/*/final.mp4
+      - name: Upload to Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VIDEO=$(find soundscapes -name "final.mp4" | head -1)
+          TAG="video-$(date +%Y%m%d-%H%M%S)-sleep"
+          gh release create "$TAG" "$VIDEO#sleep_soundscape.mp4" \
+            --title "Sleep Soundscape 8H" --notes "AI Generated"
