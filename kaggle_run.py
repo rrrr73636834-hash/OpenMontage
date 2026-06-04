@@ -11,14 +11,20 @@ KERNEL_SLUG=f"{KAGGLE_USER}/forts-video-pipeline"
 
 def push_kernel(nb_path,niche,topic,duration,lang):
     nb=json.loads(nb_path.read_text("utf-8"))
-    inject={"cell_type":"code","metadata":{},"outputs":[],"execution_count":None,"source":
-        f'''import os
-os.environ["TOPIC"]="""{topic}"""
-os.environ["NICHE"]="""{niche}"""
-os.environ["DURATION"]="""{duration}"""
-os.environ["LANG"]="""{lang}"""
-os.environ["OPENROUTER_API_KEY"]=os.environ.get("OPENROUTER_API_KEY","")
-'''}
+    inject={
+        "cell_type": "code",
+        "metadata": {},
+        "outputs": [],
+        "execution_count": None,
+        "source": [
+            "import os\n",
+            f'os.environ[\"TOPIC\"] = {json.dumps(topic)}\n',
+            f'os.environ[\"NICHE\"] = {json.dumps(niche)}\n',
+            f'os.environ[\"DURATION\"] = \"{duration}\"\n',
+            f'os.environ[\"LANG\"] = {json.dumps(lang)}\n',
+            f'os.environ[\"OPENROUTER_API_KEY\"] = {json.dumps(os.environ.get("OPENROUTER_API_KEY",""))}\n',
+        ],
+    }
     nb["cells"].insert(0,inject)
     r=requests.post(f"{KAGGLE_BASE}/kernels/push",auth=KAGGLE_AUTH,
         headers={"Content-Type":"application/json"},
