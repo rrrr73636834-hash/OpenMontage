@@ -1,86 +1,78 @@
 name: Make 3 Videos
 on:
   workflow_dispatch:
-
 permissions:
   contents: write
 
 jobs:
-  business:
+  financial_crime:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
-      - name: Install ffmpeg+ffprobe
-        run: |
-          wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz
-          tar xf ffmpeg-master-latest-linux64-gpl.tar.xz
-          sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffmpeg /usr/local/bin/
-          sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffprobe /usr/local/bin/
-      - name: Install Python deps
-        run: pip install edge-tts faster-whisper requests python-dotenv soundfile kokoro -q
-      - name: Make video
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install requests
+      - name: Run pipeline
         env:
-          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
-          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          KAGGLE_USERNAME:    ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY:         ${{ secrets.KAGGLE_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: python documentary.py "How Enron Destroyed 20000 Lives" --duration 25 --lang en
-      - name: Upload to Release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VIDEO=$(find projects -name "final.mp4" | head -1)
-          TAG="enron-$(date +%Y%m%d-%H%M%S)"
-          gh release create "$TAG" "$VIDEO#enron_documentary.mp4" --title "Enron Documentary" --notes "AI"
+          python kaggle_run.py --niche financial_crime \
+            --topic "The FTX Collapse: How Sam Bankman-Fried Lost Everything" \
+            --duration 15 --lang en --output ./out_financial
+      - name: Upload
+        env: {GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"}
+        run: |
+          VIDEO=$(find ./out_financial -name "final.mp4" | head -1)
+          TAG="financial-$(date +%Y%m%d-%H%M%S)"
+          gh release create "$TAG" "$VIDEO#ftx_collapse.mp4" --title "Financial Crime: FTX Collapse" --notes "FLUX.1+Kokoro+Whisper"
 
-  stoicism:
+  empire_collapse:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
-      - name: Install ffmpeg+ffprobe
-        run: |
-          wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz
-          tar xf ffmpeg-master-latest-linux64-gpl.tar.xz
-          sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffmpeg /usr/local/bin/
-          sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffprobe /usr/local/bin/
-      - name: Install Python deps
-        run: pip install edge-tts faster-whisper requests python-dotenv soundfile kokoro -q
-      - name: Make video
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install requests
+      - name: Run pipeline
         env:
-          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
-          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          KAGGLE_USERNAME:    ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY:         ${{ secrets.KAGGLE_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: python documentary.py "How Marcus Aurelius Mastered Self Control" --duration 20 --lang en
-      - name: Upload to Release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VIDEO=$(find projects -name "final.mp4" | head -1)
-          TAG="marcus-$(date +%Y%m%d-%H%M%S)"
-          gh release create "$TAG" "$VIDEO#marcus_documentary.mp4" --title "Marcus Aurelius" --notes "AI"
+          python kaggle_run.py --niche empire_collapse \
+            --topic "Why Rome Fell: The Final Days of an Empire" \
+            --duration 20 --lang en --output ./out_empire
+      - name: Upload
+        env: {GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"}
+        run: |
+          VIDEO=$(find ./out_empire -name "final.mp4" | head -1)
+          TAG="empire-$(date +%Y%m%d-%H%M%S)"
+          gh release create "$TAG" "$VIDEO#rome_fell.mp4" --title "Empire: Why Rome Fell" --notes "FLUX.1+Kokoro+Whisper"
 
-  sleep:
+  dark_psychology:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
-      - name: Install ffmpeg+ffprobe
-        run: |
-          wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz
-          tar xf ffmpeg-master-latest-linux64-gpl.tar.xz
-          sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffmpeg /usr/local/bin/
-          sudo mv ffmpeg-master-latest-linux64-gpl/bin/ffprobe /usr/local/bin/
-      - name: Install Python deps
-        run: pip install requests python-dotenv soundfile -q
-      - name: Make video
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install requests
+      - name: Run pipeline
         env:
-          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
-        run: python soundscape.py "Dark Forest Rain for Deep Sleep" --mood rain --hours 8
-      - name: Upload to Release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          KAGGLE_USERNAME:    ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY:         ${{ secrets.KAGGLE_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
-          VIDEO=$(find soundscapes -name "final.mp4" | head -1)
-          TAG="sleep-$(date +%Y%m%d-%H%M%S)"
-          gh release create "$TAG" "$VIDEO#sleep_soundscape.mp4" --title "Sleep Soundscape 8H" --notes "AI"
+          python kaggle_run.py --niche dark_psychology \
+            --topic "How Ted Bundy Manipulated Everyone Around Him" \
+            --duration 15 --lang en --output ./out_psychology
+      - name: Upload
+        env: {GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"}
+        run: |
+          VIDEO=$(find ./out_psychology -name "final.mp4" | head -1)
+          TAG="psychology-$(date +%Y%m%d-%H%M%S)"
+          gh release create "$TAG" "$VIDEO#ted_bundy.mp4" --title "Psychology: Ted Bundy" --notes "FLUX.1+Kokoro+Whisper"
