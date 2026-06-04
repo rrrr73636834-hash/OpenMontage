@@ -27,13 +27,59 @@ FALLBACK_MODELS = [
 
 # ── 1. SCRIPT ──────────────────────────────────────────────────────────────
 
-def gen_script(topic: str, minutes: int, lang: str = "en") -> str:
+def gen_script(topic: str, minutes: int, lang: str = "en", niche: str = "financial_crime") -> str:
     words = minutes * 130
-    instr = ("BBC documentary style, authoritative cinematic tone."
-             if lang == "en" else "BBC стиль, авторитетный тон.")
-    prompt = (f"Write a {minutes}-minute documentary narration about: {topic}. "
-              f"Length: {words} words. {instr} "
-              f"Plain narration only, no headers, no stage directions.")
+
+    hooks = {
+        "financial_crime": "Start with a shocking financial fact or crime statistic that nobody expected.",
+        "empire_collapse": "Start with the exact moment everything fell apart — the final hours of the empire.",
+        "dark_psychology": "Start with a disturbing question about human nature that the viewer cannot ignore.",
+    }
+    hook_instruction = hooks.get(niche, hooks["financial_crime"])
+
+    if lang == "en":
+        prompt = f"""You are a world-class BBC documentary scriptwriter. Write a {minutes}-minute narration script about: {topic}
+
+STRICT STRUCTURE — follow exactly:
+
+[HOOK — first 30 seconds]
+{hook_instruction} Open with ONE shocking sentence that stops the viewer from scrolling. No context yet. Pure impact.
+
+[SETUP — next 90 seconds]  
+Give the viewer the context they need. Why does this story matter? What is at stake? Build intrigue.
+
+[CONFLICT — {minutes-4} minutes]
+Tell the full story with dramatic tension. Use specific names, dates, numbers. Show the turning points. Make the viewer feel like they are watching it happen live.
+
+[CLIMAX — 2 minutes]
+The peak moment. The collapse, the revelation, the fall. Maximum emotional impact.
+
+[RESOLUTION — 1 minute]
+What happened after. What this means for the world today. Leave the viewer with a disturbing or profound thought.
+
+[CALL TO ACTION — last 20 seconds]
+One sentence that makes the viewer want to watch the next video immediately.
+
+RULES:
+- Total length: exactly {words} words
+- Plain narration text only — NO headers, NO [brackets], NO stage directions in output
+- Authoritative BBC documentary tone
+- Every sentence must earn its place
+- Use the rule of three for emphasis
+- End every section with a hook into the next"""
+    else:
+        prompt = f"""Ты — сценарист документальных фильмов BBC мирового уровня. Напиши нарративный сценарий на {minutes} минут о: {topic}
+
+СТРУКТУРА:
+[ХЮУК — первые 30 секунд] Один шокирующий факт. Никакого контекста.
+[СЕТАП — 90 секунд] Почему это важно. Что поставлено на карту.
+[КОНФЛИКТ — {minutes-4} минут] Полная история с напряжением. Конкретные имена, даты, цифры.
+[КУЛЬМИНАЦИЯ — 2 минуты] Пиковый момент. Максимальный эмоциональный удар.
+[РАЗВЯЗКА — 1 минута] Что это значит сегодня.
+[ПРИЗЫВ — 20 секунд] Одно предложение заставляющее смотреть следующее видео.
+
+ПРАВИЛА: {words} слов, только нарративный текст, авторитетный тон BBC."""
+
     for model in FALLBACK_MODELS:
         try:
             r = requests.post(
@@ -354,7 +400,7 @@ def main():
     # 1. Script
     sp = str(out/"script.txt")
     if not Path(sp).exists():
-        Path(sp).write_text(gen_script(a.topic, a.duration, a.lang), encoding="utf-8")
+        Path(sp).write_text(gen_script(a.topic, a.duration, a.lang, a.niche), encoding="utf-8")
     ok(sp, "Script", 1)
     script = Path(sp).read_text("utf-8")
 
