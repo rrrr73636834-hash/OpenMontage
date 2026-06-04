@@ -12,22 +12,26 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
-      - run: pip install requests kaggle
-      - name: Run pipeline
+      - name: Install deps
+        run: |
+          pip install requests python-dotenv kokoro>=0.9.4 soundfile numpy faster-whisper kaggle
+          sudo apt-get install -y ffmpeg
+      - name: Run
         env:
+          PEXELS_API_KEY:     ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY:    ${{ secrets.PIXABAY_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           KAGGLE_USERNAME:    ${{ secrets.KAGGLE_USERNAME }}
           KAGGLE_KEY:         ${{ secrets.KAGGLE_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
-          python kaggle_run.py --niche financial_crime \
-            --topic "The FTX Collapse: How Sam Bankman-Fried Lost Everything" \
-            --duration 15 --lang en --output ./out_financial
+          python documentary.py "The FTX Collapse: How Sam Bankman-Fried Lost Everything" \
+            --niche financial_crime --duration 15 --lang en
       - name: Upload
         env: {GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"}
         run: |
-          VIDEO=$(find ./out_financial -name "final.mp4" | head -1)
+          VIDEO=$(find productions -name "final.mp4" | head -1)
           TAG="financial-$(date +%Y%m%d-%H%M%S)"
-          gh release create "$TAG" "$VIDEO#ftx_collapse.mp4" --title "Financial Crime: FTX Collapse" --notes "FLUX.1+Kokoro+Whisper"
+          gh release create "$TAG" "$VIDEO#ftx.mp4" --title "Financial Crime: FTX" --notes "hybrid pipeline"
 
   empire_collapse:
     runs-on: ubuntu-latest
@@ -36,22 +40,26 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
-      - run: pip install requests kaggle
-      - name: Run pipeline
+      - name: Install deps
+        run: |
+          pip install requests python-dotenv kokoro>=0.9.4 soundfile numpy faster-whisper kaggle
+          sudo apt-get install -y ffmpeg
+      - name: Run
         env:
+          PEXELS_API_KEY:     ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY:    ${{ secrets.PIXABAY_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           KAGGLE_USERNAME:    ${{ secrets.KAGGLE_USERNAME }}
           KAGGLE_KEY:         ${{ secrets.KAGGLE_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
-          python kaggle_run.py --niche empire_collapse \
-            --topic "Why Rome Fell: The Final Days of an Empire" \
-            --duration 20 --lang en --output ./out_empire
+          python documentary.py "Why Rome Fell: The Final Days of an Empire" \
+            --niche empire_collapse --duration 20 --lang en
       - name: Upload
         env: {GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"}
         run: |
-          VIDEO=$(find ./out_empire -name "final.mp4" | head -1)
+          VIDEO=$(find productions -name "final.mp4" | head -1)
           TAG="empire-$(date +%Y%m%d-%H%M%S)"
-          gh release create "$TAG" "$VIDEO#rome_fell.mp4" --title "Empire: Why Rome Fell" --notes "FLUX.1+Kokoro+Whisper"
+          gh release create "$TAG" "$VIDEO#rome.mp4" --title "Empire: Why Rome Fell" --notes "hybrid pipeline"
 
   dark_psychology:
     runs-on: ubuntu-latest
@@ -60,19 +68,23 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
-      - run: pip install requests kaggle
-      - name: Run pipeline
+      - name: Install deps
+        run: |
+          pip install requests python-dotenv kokoro>=0.9.4 soundfile numpy faster-whisper kaggle
+          sudo apt-get install -y ffmpeg
+      - name: Run
         env:
+          PEXELS_API_KEY:     ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY:    ${{ secrets.PIXABAY_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           KAGGLE_USERNAME:    ${{ secrets.KAGGLE_USERNAME }}
           KAGGLE_KEY:         ${{ secrets.KAGGLE_KEY }}
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
-          python kaggle_run.py --niche dark_psychology \
-            --topic "How Ted Bundy Manipulated Everyone Around Him" \
-            --duration 15 --lang en --output ./out_psychology
+          python documentary.py "How Ted Bundy Manipulated Everyone Around Him" \
+            --niche dark_psychology --duration 15 --lang en
       - name: Upload
         env: {GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"}
         run: |
-          VIDEO=$(find ./out_psychology -name "final.mp4" | head -1)
+          VIDEO=$(find productions -name "final.mp4" | head -1)
           TAG="psychology-$(date +%Y%m%d-%H%M%S)"
-          gh release create "$TAG" "$VIDEO#ted_bundy.mp4" --title "Psychology: Ted Bundy" --notes "FLUX.1+Kokoro+Whisper"
+          gh release create "$TAG" "$VIDEO#bundy.mp4" --title "Psychology: Ted Bundy" --notes "hybrid pipeline"
