@@ -1,80 +1,100 @@
 NICHES = {
-    "business_collapse": {
-        "voice": "en-US-GuyNeural",
-        "speed": 0.92,
-        "color_grade": "cold_cyan",
-        "music_mood": "cafe",
-        "search_terms": [
-            "bankruptcy boardroom drama",
-            "Wall Street trading floor",
-            "corporate collapse documentary footage",
-            "empty office towers at night",
-        ],
-        "sdxl_prompt": (
-            "Cinematic business collapse documentary still, dark skyscraper cityscape, "
-            "broken glass reflections, moody teal and orange grade, financial ruin atmosphere, 4K ultra-detailed"
-        ),
-        "script_style": (
-            "Investigative economic documentary narration with dramatic corporate collapse scenes, "
-            "deep analysis, historic business failures, and authoritative voiceover tone."
-        ),
-        "topics": [
-            "The fall of retail giants",
-            "Corporate fraud and financial meltdown",
-            "The day the market crashed",
-            "Inside the boardroom chaos",
-        ],
-    },
-    "ancient_stoicism": {
-        "voice": "en-US-AriaNeural",
+    "financial_crime": {
+        "voice": "bm_lewis",
         "speed": 0.88,
-        "color_grade": "warm_gold",
-        "music_mood": "space",
+        "color_grade": "cold_cyan",
+        "music_mood": "dramatic tense investigative documentary dark orchestral",
         "search_terms": [
-            "ancient philosophy ruins",
-            "stoic marble statue landscape",
-            "classical temple twilight",
-            "philosopher walking in nature",
+            "wall street trading floor",
+            "corporate fraud investigation",
+            "financial crisis documentary footage",
+            "courtroom trial business fraud",
+            "stock market crash news footage",
         ],
-        "sdxl_prompt": (
-            "Ancient stoicism and philosophy documentary style image, marble statue at sunrise, "
-            "soft golden light, misty ruins, calm reflective mood, cinematic 4K detailed painting"
+        "image_style": (
+            "cinematic financial crime documentary still, dark corporate cityscape, "
+            "cold cyan teal color grade, dramatic shadows, 8K photorealistic, "
+            "moody investigative atmosphere, shallow depth of field"
         ),
         "script_style": (
-            "Philosophical documentary narration with contemplative tone, life lessons from stoicism, "
-            "timeless wisdom and practical guidance delivered in a cinematic and calm manner."
+            "BBC investigative documentary narration, dramatic corporate crime storytelling, "
+            "authoritative tone, revealing hidden details, building tension throughout."
         ),
         "topics": [
-            "Marcus Aurelius and modern life",
-            "The power of negative visualization",
-            "How stoicism shaped western thought",
-            "Daily rituals of ancient philosophers",
+            "How Enron Destroyed 20000 Lives",
+            "The FTX Collapse: How Sam Bankman-Fried Lost Everything",
+            "Lehman Brothers: The Bank That Broke the World",
+            "Bernie Madoff: The Biggest Ponzi Scheme in History",
+            "WeWork: The $47 Billion Fraud Nobody Saw Coming",
+            "The Silicon Valley Bank Collapse Explained",
+            "Terra Luna: How $60 Billion Vanished in 3 Days",
+            "How Theranos Fooled Silicon Valley for a Decade",
         ],
     },
-    "sleep_stories": {
-        "voice": "en-US-JennyNeural",
-        "speed": 0.84,
-        "color_grade": "midnight_blue",
-        "music_mood": "rain",
+    "empire_collapse": {
+        "voice": "am_michael",
+        "speed": 0.85,
+        "color_grade": "warm_gold",
+        "music_mood": "epic orchestral ancient historical cinematic war drums",
         "search_terms": [
-            "soft sleep story background",
-            "calm night forest scene",
-            "gentle bedtime storytelling visuals",
-            "peaceful dreamlike landscape at night",
+            "ancient ruins documentary footage",
+            "historical empire war battle footage",
+            "ancient civilization archaeology",
+            "historical map ancient territory",
+            "empire soldiers ancient military",
         ],
-        "sdxl_prompt": (
-            "Sleep story bedtime tale scene, dark dreamy forest under moonlight, soft glowing lanterns, "
-            "misty blue atmosphere, tranquil peaceful mood, cinematic 4K watercolor style"
+        "image_style": (
+            "epic historical documentary cinematic still, ancient empire ruins golden hour, "
+            "warm dramatic light, dust and atmosphere, 8K photorealistic, "
+            "cinematic wide angle, epic scale landscapes"
         ),
         "script_style": (
-            "Sleep story narration with soothing bedtime tone, gentle pacing, vivid dream imagery, "
-            "and comforting language designed to help listeners relax and drift off."
+            "Epic historical documentary narration, cinematic BBC style, "
+            "building dramatic tension, rich historical detail, "
+            "making ancient events feel urgent and relevant today."
         ),
         "topics": [
-            "The midnight forest lullaby",
-            "A moonlit journey into dreams",
-            "The sleepy village by the lake",
-            "The quiet whisper of ancient trees",
+            "Why Rome Fell: The Final Days of an Empire",
+            "How the Soviet Union Collapsed in 72 Hours",
+            "The Last Days of the Ottoman Empire",
+            "Why Yugoslavia Broke Apart in Blood and Fire",
+            "The Fall of the Mongol Empire: History's Greatest Collapse",
+            "How the British Empire Lost Everything After WW2",
+            "The Persian Empire: How Darius Lost to Alexander",
+            "Why the Aztec Empire Fell in Just Two Years",
+        ],
+    },
+    "dark_psychology": {
+        "voice": "af_heart",
+        "speed": 0.86,
+        "color_grade": "midnight_blue",
+        "music_mood": "dark psychological thriller ambient tense subtle",
+        "search_terms": [
+            "psychological manipulation documentary",
+            "criminal psychology interview footage",
+            "dark psychology human behavior",
+            "cult documentary footage",
+            "narcissist manipulation behavior study",
+        ],
+        "image_style": (
+            "dark psychology documentary cinematic still, dramatic contrast lighting, "
+            "deep midnight blue shadows, psychological thriller atmosphere, "
+            "8K photorealistic, moody close-up details, unsettling calm"
+        ),
+        "script_style": (
+            "Investigative psychological documentary narration, calm authoritative tone, "
+            "revealing disturbing truths methodically, building psychological tension, "
+            "analytical yet deeply human storytelling."
+        ),
+        "topics": [
+            "How Ted Bundy Manipulated Everyone Around Him",
+            "The Psychology Behind Why Smart People Join Cults",
+            "How Narcissists Control and Destroy Their Victims",
+            "The Dark Psychology of a Con Artist",
+            "Why Serial Killers Seem So Normal to Their Neighbors",
+            "How Cult Leaders Rewire Human Brains",
+            "The Science of Manipulation: How Anyone Can Be Controlled",
+            "Why Good People Do Evil Things: The Stanford Prison Experiment",
         ],
     },
 }
