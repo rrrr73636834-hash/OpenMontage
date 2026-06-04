@@ -18,7 +18,9 @@ KAGGLE_USER     = os.getenv("KAGGLE_USERNAME","")
 KAGGLE_KEY      = os.getenv("KAGGLE_KEY","")
 
 FALLBACK_MODELS = [
-    "google/gemini-2.0-flash-exp:free",
+    "google/gemma-4-26b-a4b-it:free",
+    "moonshotai/kimi-k2.6:free",
+    "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
     "meta-llama/llama-3.3-70b-instruct:free",
     "deepseek/deepseek-r1:free",
 ]
