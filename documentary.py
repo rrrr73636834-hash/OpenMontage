@@ -80,6 +80,25 @@ RULES:
 
 ПРАВИЛА: {words} слов, только нарративный текст, авторитетный тон BBC."""
 
+    # Try Gemini directly first (most reliable)
+    GEMINI_KEY = os.getenv("GEMINI_API_KEY","")
+    if GEMINI_KEY:
+        try:
+            r = requests.post(
+                f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_KEY}",
+                headers={"Content-Type":"application/json"},
+                json={"contents":[{"parts":[{"text":prompt}]}],
+                      "generationConfig":{"maxOutputTokens":4000,"temperature":0.3}},
+                timeout=90)
+            data = r.json()
+            content = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+            if len(content) > 200:
+                print(f"✅ Script: gemini-2.0-flash ({len(content.split())} words)")
+                return content
+        except Exception as e:
+            print(f"⚠️  Gemini direct: {e}")
+
+    # OpenRouter fallback
     for model in FALLBACK_MODELS:
         try:
             r = requests.post(
@@ -89,7 +108,13 @@ RULES:
                 json={"model": model, "messages": [{"role":"user","content":prompt}],
                       "max_tokens": 4000, "temperature": 0.3},
                 timeout=90)
-            content = r.json()["choices"][0]["message"]["content"].strip()
+            data = r.json()
+            print(f"  {model} raw: {str(data)[:100]}")
+            choices = data.get("choices",[])
+            if not choices:
+                print(f"⚠️  {model}: empty choices — {data.get('error',{}).get('message','')[:80]}")
+                continue
+            content = choices[0].get("message",{}).get("content","").strip()
             if len(content) > 200:
                 print(f"✅ Script: {model} ({len(content.split())} words)")
                 return content
